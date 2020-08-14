@@ -1,10 +1,9 @@
 package com.widehouse.cafe.cafe.model;
 
+import java.time.ZonedDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.ZonedDateTime;
 
 @Getter
 public class Cafe {
@@ -24,9 +23,7 @@ public class Cafe {
         this.visible = visible;
     }
 
-
     public boolean isPublic() {
         return isVisible();
     }
-
 }

@@ -1,10 +1,9 @@
 package com.widehouse.cafe.cafe.model;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.BDDAssertions.then;
 
 import java.time.ZonedDateTime;
-
-import static org.assertj.core.api.BDDAssertions.then;
+import org.junit.jupiter.api.Test;
 
 class CafeTest {
     @Test
