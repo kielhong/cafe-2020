@@ -19,4 +19,9 @@ public class BoardFixtures {
                 })
                 .collect(Collectors.toList());
     }
+
+    public static Board board1(Cafe cafe) {
+        ReflectionTestUtils.setField(board1, "cafe", cafe);
+        return board1;
+    }
 }

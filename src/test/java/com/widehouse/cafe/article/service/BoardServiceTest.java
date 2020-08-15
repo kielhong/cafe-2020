@@ -2,12 +2,14 @@ package com.widehouse.cafe.article.service;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.model.BoardRepository;
 import com.widehouse.cafe.cafe.model.Cafe;
 import com.widehouse.cafe.cafe.model.CafeFixtures;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,5 +39,18 @@ class BoardServiceTest {
         var result = service.listByCafe(cafe);
         // then
         then(result).isEqualTo(boards);
+    }
+
+    @Test
+    void given_boardsOfCafe_when_getBoard_then_returnBoard() {
+        // given
+        var board = BoardFixtures.board1(cafe);
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
+        // when
+        var result = service.getBoard(1L);
+        // then
+        then(result)
+                .isPresent()
+                .hasValue(board);
     }
 }

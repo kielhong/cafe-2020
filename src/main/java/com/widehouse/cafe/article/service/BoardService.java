@@ -4,6 +4,7 @@ import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardRepository;
 import com.widehouse.cafe.cafe.model.Cafe;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,5 +17,9 @@ public class BoardService {
 
     public List<Board> listByCafe(Cafe cafe) {
         return boardRepository.findByCafe(cafe);
+    }
+
+    public Optional<Board> getBoard(Long boardId) {
+        return boardRepository.findById(boardId);
     }
 }
