@@ -4,9 +4,10 @@ plugins {
 	id 'org.asciidoctor.convert' version '1.5.8'
 	id "io.freefair.lombok" version "5.1.1"
 	id 'java'
-	id 'checkstyle'
 	id 'java-library'
 	id 'java-test-fixtures'
+	id 'checkstyle'
+	id 'jacoco'
 }
 
 group = 'com.widehouse'
@@ -39,6 +40,18 @@ test {
 	classpath = sourceSets.main.output.classesDirs + classpath
 	useJUnitPlatform()
 	outputs.dir snippetsDir
+}
+
+jacocoTestReport {
+	afterEvaluate {
+		getClassDirectories().setFrom(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+			        '**/*Application*'
+			])
+		})
+	}
+
+	dependsOn test
 }
 
 asciidoctor {
