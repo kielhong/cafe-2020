@@ -5,10 +5,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.model.BoardRepository;
 import com.widehouse.cafe.cafe.model.Cafe;
 import com.widehouse.cafe.cafe.model.CafeFixtures;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,20 @@ class BoardServiceTest {
         var result = service.listByCafe(cafe);
         // then
         then(result).isEqualTo(boards);
+    }
+
+    @Test
+    void given_boardsOfCafe_when_listByCafe_then_returnOrderedList() {
+        // given
+        var board1 = Board.builder().name("board1").description("desc1").cafe(cafe).order(3).build();
+        var board2 = Board.builder().name("board2").description("desc2").cafe(cafe).order(2).build();
+        var board3 = Board.builder().name("board3").description("desc3").cafe(cafe).order(1).build();
+        given(boardRepository.findByCafe(any(Cafe.class)))
+                .willReturn(List.of(board1, board2, board3));
+        // when
+        var result = service.listByCafe(cafe);
+        // then
+        then(result).containsExactly(board3, board2, board1);
     }
 
     @Test
