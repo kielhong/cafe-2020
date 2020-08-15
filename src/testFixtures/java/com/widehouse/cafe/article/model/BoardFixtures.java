@@ -18,6 +18,5 @@ public class BoardFixtures {
                     return board;
                 })
                 .collect(Collectors.toList());
-
     }
 }
