@@ -1,11 +1,14 @@
 package com.widehouse.cafe.cafe.model;
 
 import java.time.ZonedDateTime;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.Cascade;
 
 @Entity
 @Getter

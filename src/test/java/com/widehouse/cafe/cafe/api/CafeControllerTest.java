@@ -35,7 +35,7 @@ class CafeControllerTest {
             var cafe = CafeFixtures.foo();
             given(cafeService.getCafe(anyString())).willReturn(Optional.of(cafe));
             // when
-            mvc.perform(get("/api/cafe/{nickname}", "foo"))
+            mvc.perform(get("/api/cafes/{nickname}", "foo"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.nickname").value(cafe.getNickname()));
         }
@@ -46,7 +46,7 @@ class CafeControllerTest {
             // given
             given(cafeService.getCafe(anyString())).willReturn(Optional.empty());
             // when
-            mvc.perform(get("/api/cafe/{nickname}", "foo"))
+            mvc.perform(get("/api/cafes/{nickname}", "foo"))
                     .andExpect(status().isNotFound());
         }
     }
