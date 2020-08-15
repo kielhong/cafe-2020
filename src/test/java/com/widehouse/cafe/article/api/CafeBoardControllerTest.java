@@ -1,4 +1,4 @@
-package com.widehouse.cafe.cafe.api;
+package com.widehouse.cafe.article.api;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +36,7 @@ class CafeBoardControllerTest {
     @DisplayName("GET /api/cafes/{nickname}/boards")
     class ListBoards {
         @Test
-        void given_boardsOfCafe_when_get_boardsByCafe_then_listBoards() throws Exception {
+        void given_boardsOfCafe_when_list_boardsByCafe_then_listBoards() throws Exception {
             // given
             var cafe = CafeFixtures.foo();
             given(cafeService.getCafe(anyString())).willReturn(Optional.of(cafe));

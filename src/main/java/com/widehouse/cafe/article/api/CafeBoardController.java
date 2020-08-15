@@ -1,4 +1,4 @@
-package com.widehouse.cafe.cafe.api;
+package com.widehouse.cafe.article.api;
 
 import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.service.BoardService;
