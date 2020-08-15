@@ -3,8 +3,9 @@ package com.widehouse.cafe.article.service;
 import com.widehouse.cafe.article.model.Article;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.Board;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,5 +18,9 @@ public class ArticleService {
 
     public List<Article> listByBoard(Board board) {
         return articleRepository.findByBoard(board);
+    }
+
+    public Optional<Article> getArticle(UUID id) {
+        return articleRepository.findById(id);
     }
 }

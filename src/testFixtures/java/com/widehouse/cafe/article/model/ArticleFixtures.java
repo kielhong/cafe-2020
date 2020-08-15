@@ -20,4 +20,14 @@ public class ArticleFixtures {
                 Article.builder()
                         .title("article4").content("content4").board(board).createdAt(now).build());
     }
+
+    /**
+     * Article fixtures.
+     * @return Article
+     */
+    public static Article article() {
+        return Article.builder()
+                .title("article1").content("content1").board(BoardFixtures.board1()).createdAt(ZonedDateTime.now())
+                .build();
+    }
 }

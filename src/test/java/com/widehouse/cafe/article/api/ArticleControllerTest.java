@@ -14,6 +14,7 @@ import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.service.ArticleService;
 import com.widehouse.cafe.article.service.BoardService;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -58,4 +59,30 @@ class ArticleControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("GET /api/articles/{id}")
+    class GetArticle {
+        @Test
+        @DisplayName("given article of id then return a article")
+        void given_Article_then_returnArticle() throws Exception {
+            // given
+            var article = ArticleFixtures.article();
+            given(articleService.getArticle(any(UUID.class))).willReturn(Optional.of(article));
+            // when
+            mvc.perform(get("/api/articles/{id}", UUID.randomUUID()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.title").value(article.getTitle()))
+                    .andExpect(jsonPath("$.content").value(article.getContent()));
+        }
+
+        @Test
+        @DisplayName("given not exists Article then 404 NotFound")
+        void given_notExistsArticle_then_404NotFound() throws Exception {
+            // given
+            given(articleService.getArticle(any(UUID.class))).willReturn(Optional.empty());
+            // when
+            mvc.perform(get("/api/articles/{id}", UUID.randomUUID()))
+                    .andExpect(status().isNotFound());
+        }
+    }
 }

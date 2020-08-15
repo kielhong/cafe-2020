@@ -8,6 +8,8 @@ import com.widehouse.cafe.article.model.ArticleFixtures;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,5 +39,18 @@ class ArticleServiceTest {
         var result = service.listByBoard(board);
         // then
         then(result).isEqualTo(articles);
+    }
+
+    @Test
+    void given_article_when_getArticle_then_returnArticle() {
+        // given
+        var article = ArticleFixtures.article();
+        given(articleRepository.findById(any(UUID.class))).willReturn(Optional.of(article));
+        // when
+        var result = service.getArticle(UUID.randomUUID());
+        // then
+        then(result)
+                .isPresent()
+                .hasValue(article);
     }
 }
