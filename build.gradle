@@ -5,6 +5,8 @@ plugins {
 	id "io.freefair.lombok" version "5.1.1"
 	id 'java'
 	id 'checkstyle'
+	id 'java-library'
+	id 'java-test-fixtures'
 }
 
 group = 'com.widehouse'
@@ -34,8 +36,9 @@ dependencies {
 }
 
 test {
-	outputs.dir snippetsDir
+	classpath = sourceSets.main.output.classesDirs + classpath
 	useJUnitPlatform()
+	outputs.dir snippetsDir
 }
 
 asciidoctor {
