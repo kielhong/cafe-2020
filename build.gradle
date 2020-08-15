@@ -37,6 +37,7 @@ dependencies {
 //	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	testFixturesImplementation('org.springframework.boot:spring-boot-starter-test')
+	testFixturesImplementation('org.springframework.boot:spring-boot-starter-data-jpa')
 }
 
 test {
