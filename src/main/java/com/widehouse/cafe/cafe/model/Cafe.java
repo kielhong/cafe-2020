@@ -1,15 +1,21 @@
 package com.widehouse.cafe.cafe.model;
 
 import java.time.ZonedDateTime;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.Cascade;
 
+@Entity
 @Getter
 public class Cafe {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String nickname;
     private String description;
+    @ManyToOne
     private Category category;
     private ZonedDateTime createdAt;
     @Getter(AccessLevel.PRIVATE)

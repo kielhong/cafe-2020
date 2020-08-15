@@ -2,6 +2,7 @@ package com.widehouse.cafe.cafe.api;
 
 import com.widehouse.cafe.cafe.model.Cafe;
 import com.widehouse.cafe.cafe.service.CafeService;
+import com.widehouse.cafe.exception.CafeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,6 @@ public class CafeController {
 
     @GetMapping("{nickname}")
     public Cafe getCafe(@PathVariable String nickname) {
-        return cafeService.getCafe(nickname);
+        return cafeService.getCafe(nickname).orElseThrow(() -> new CafeNotFoundException(nickname));
     }
 }
