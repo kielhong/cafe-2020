@@ -1,5 +1,6 @@
 package com.widehouse.cafe.article.model;
 
+import com.widehouse.cafe.article.api.ArticleRequest;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import javax.persistence.Entity;
@@ -26,5 +27,18 @@ public class Article {
         this.content = content;
         this.board = board;
         this.createdAt = createdAt;
+    }
+
+    /**
+     * create Article from article request.
+     * @return created Article
+     */
+    public static Article from(Board board, ArticleRequest request) {
+        return Article.builder()
+                .board(board)
+                .title(request.getTitle())
+                .content(request.getContent())
+                .createdAt(ZonedDateTime.now())
+                .build();
     }
 }

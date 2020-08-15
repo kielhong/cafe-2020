@@ -6,11 +6,17 @@ import com.widehouse.cafe.article.service.BoardService;
 import com.widehouse.cafe.exception.ArticleNotFoundException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("api")
@@ -42,4 +48,18 @@ public class ArticleController {
                 .orElseThrow(() -> new ArticleNotFoundException(id));
     }
 
+    /**
+     * POST /api/articles.
+     * @param articleRequest request for article
+     * @return id of created article
+     */
+    @PostMapping("articles")
+    public Map<String, UUID> createArticle(@Valid @RequestBody ArticleRequest articleRequest) {
+        var board = boardService.getBoard(articleRequest.getBoardId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        articleRequest.getBoardId() + " board does not exist"));
+
+        var article = articleService.createArticle(board, articleRequest);
+        return Map.of("id", article.getId());
+    }
 }
