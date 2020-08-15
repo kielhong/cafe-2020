@@ -34,6 +34,5 @@ class CafeControllerTest {
         this.mvc.perform(get("/api/cafe/{nickname}", "foo"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nickname").value(cafe.getNickname()));
-
     }
 }
