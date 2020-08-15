@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/cafes/{nickname}")
+@RequestMapping("api/cafes/{nickname}")
 public class ArticleController {
     private BoardService boardService;
     private ArticleService articleService;
@@ -21,6 +21,12 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
+    /**
+     * GET /api/cafes/{nickname}/boards/{boardId}/articles.
+     * @param nickname nickname of Cafe
+     * @param boardId id of Board
+     * @return list of Articles
+     */
     @GetMapping("boards/{boardId}/articles")
     public List<Article> listArticles(@PathVariable String nickname, @PathVariable Long boardId) {
         return boardService.getBoard(boardId)

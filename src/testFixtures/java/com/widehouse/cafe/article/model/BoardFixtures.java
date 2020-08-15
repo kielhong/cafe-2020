@@ -7,7 +7,7 @@ import java.util.List;
 public class BoardFixtures {
     /**
      * Board list fixtures.
-     * @param cafe
+     * @param cafe Cafe
      */
     public static List<Board> boards(Cafe cafe) {
         return List.of(prepareBoard("board1", "board desc 1", 1, cafe),

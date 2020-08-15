@@ -16,6 +16,11 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
+    /**
+     * list boards of Cafe sorted.
+     * @param cafe Cafe
+     * @return list of Boards
+     */
     public List<Board> listByCafe(Cafe cafe) {
         return boardRepository.findByCafe(cafe).stream()
                 .sorted()
