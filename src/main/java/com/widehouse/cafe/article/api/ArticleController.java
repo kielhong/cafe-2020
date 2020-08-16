@@ -71,8 +71,6 @@ public class ArticleController {
      */
     @DeleteMapping("articles/{id}")
     public Map<String, UUID> deleteArticle(@PathVariable UUID id) {
-        articleService.getArticle(id)
-                .orElseThrow(() -> new ArticleNotFoundException(id.toString()));
         articleService.deleteArticle(id);
         return Map.of("id", id);
     }

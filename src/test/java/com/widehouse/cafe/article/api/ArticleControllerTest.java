@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +20,7 @@ import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.service.ArticleService;
 import com.widehouse.cafe.article.service.BoardService;
+import com.widehouse.cafe.exception.ArticleNotFoundException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -161,7 +163,6 @@ class ArticleControllerTest {
         void given_article_then_delete() throws Exception {
             // given
             final var id = UUID.randomUUID();
-            given(articleService.getArticle(id)).willReturn(Optional.of(ArticleFixtures.article()));
             // when
             mvc.perform(delete("/api/articles/{id}", id))
                     .andExpect(status().isOk())
@@ -174,11 +175,11 @@ class ArticleControllerTest {
         void given_notExistArticle_then_404NotFound() throws Exception {
             // given
             final var id = UUID.randomUUID();
-            given(articleService.getArticle(id)).willReturn(Optional.empty());
+            willThrow(ArticleNotFoundException.class)
+                    .given(articleService).deleteArticle(id);
             // when
             mvc.perform(delete("/api/articles/{id}", id))
                     .andExpect(status().isNotFound());
         }
-
     }
 }

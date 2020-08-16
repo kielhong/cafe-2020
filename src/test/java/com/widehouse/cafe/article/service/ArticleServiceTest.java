@@ -1,9 +1,11 @@
 package com.widehouse.cafe.article.service;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import com.widehouse.cafe.article.api.ArticleRequest;
@@ -12,6 +14,7 @@ import com.widehouse.cafe.article.model.ArticleFixtures;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
+import com.widehouse.cafe.exception.ArticleNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
@@ -81,10 +83,23 @@ class ArticleServiceTest {
         void given_id_when_delete_then_deleteArticle() {
             // given
             var id = UUID.randomUUID();
+            var article = ArticleFixtures.article();
+            given(articleRepository.findById(eq(id))).willReturn(Optional.of(article));
             // when
             service.deleteArticle(id);
             // then
-            verify(articleRepository).deleteById(eq(id));
+            verify(articleRepository).delete(eq(article));
+        }
+
+        @Test
+        void given_notExistArticle_then_throwArticleNotFoundException() {
+            // given
+            var id = UUID.randomUUID();
+            given(articleRepository.findById(eq(id))).willReturn(Optional.empty());
+            // expect
+            thenThrownBy(() -> service.deleteArticle(id))
+                    .isInstanceOf(ArticleNotFoundException.class);
+            verify(articleRepository, never()).delete(any(Article.class));
         }
     }
 
