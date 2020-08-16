@@ -43,4 +43,13 @@ class ArticleTest {
                 .hasFieldOrPropertyWithValue("board", board)
                 .hasFieldOrProperty("createdAt");
     }
+
+    @Test
+    void getContent_thenArticleContentBody() {
+        // given
+        var result = Article.builder().title("title").content("content").createdAt(ZonedDateTime.now()).build();
+        // then
+        then(result.getContent())
+                .isEqualTo("content");
+    }
 }

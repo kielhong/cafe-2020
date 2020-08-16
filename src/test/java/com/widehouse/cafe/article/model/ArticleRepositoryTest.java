@@ -1,0 +1,38 @@
+package com.widehouse.cafe.article.model;
+
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.time.ZonedDateTime;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+@DataJpaTest
+class ArticleRepositoryTest {
+    @Autowired
+    private TestEntityManager entityManager;
+    @Autowired
+    private ArticleRepository repository;
+
+    private Board board;
+
+    @BeforeEach
+    void setUp() {
+        board = entityManager.persist(BoardFixtures.board1());
+    }
+
+    @Test
+    void save_then_contentToArticleContent() {
+        // given
+        var article = Article.builder().title("title").content("content").createdAt(ZonedDateTime.now()).build();
+        repository.save(article);
+        // when
+        var result = repository.findById(article.getId());
+        // then
+        then(result)
+                .isPresent()
+                .hasValue(article);
+    }
+}
