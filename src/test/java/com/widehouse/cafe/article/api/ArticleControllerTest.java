@@ -4,7 +4,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,7 +36,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
@@ -151,5 +152,33 @@ class ArticleControllerTest {
                     arguments("title", ""),
                     arguments("", "content"));
         }
+    }
+
+    @Nested
+    @DisplayName("DELETE /api/articles/{id}")
+    class DeleteArticle {
+        @Test
+        void given_article_then_delete() throws Exception {
+            // given
+            final var id = UUID.randomUUID();
+            given(articleService.getArticle(id)).willReturn(Optional.of(ArticleFixtures.article()));
+            // when
+            mvc.perform(delete("/api/articles/{id}", id))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(id.toString()));
+            // then
+            verify(articleService).deleteArticle(eq(id));
+        }
+
+        @Test
+        void given_notExistArticle_then_404NotFound() throws Exception {
+            // given
+            final var id = UUID.randomUUID();
+            given(articleService.getArticle(id)).willReturn(Optional.empty());
+            // when
+            mvc.perform(delete("/api/articles/{id}", id))
+                    .andExpect(status().isNotFound());
+        }
+
     }
 }

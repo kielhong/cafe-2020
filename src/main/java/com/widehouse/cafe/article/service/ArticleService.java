@@ -29,4 +29,8 @@ public class ArticleService {
     public Article createArticle(Board board, ArticleRequest articleRequest) {
         return articleRepository.save(Article.from(board, articleRequest));
     }
+
+    public void deleteArticle(UUID id) {
+        articleRepository.deleteById(id);
+    }
 }

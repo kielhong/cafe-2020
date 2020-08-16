@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,5 +62,18 @@ public class ArticleController {
 
         var article = articleService.createArticle(board, articleRequest);
         return Map.of("id", article.getId());
+    }
+
+    /**
+     * DELETE /api/articles/{id}.
+     * @param id id of article
+     * @return id of deleted article
+     */
+    @DeleteMapping("articles/{id}")
+    public Map<String, UUID> deleteArticle(@PathVariable UUID id) {
+        articleService.getArticle(id)
+                .orElseThrow(() -> new ArticleNotFoundException(id.toString()));
+        articleService.deleteArticle(id);
+        return Map.of("id", id);
     }
 }

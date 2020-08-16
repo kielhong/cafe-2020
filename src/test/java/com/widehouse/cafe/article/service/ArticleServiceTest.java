@@ -2,7 +2,9 @@ package com.widehouse.cafe.article.service;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import com.widehouse.cafe.article.api.ArticleRequest;
 import com.widehouse.cafe.article.model.Article;
@@ -70,6 +72,19 @@ class ArticleServiceTest {
             var result = service.createArticle(board, request);
             // then
             then(result).isEqualTo(article);
+        }
+    }
+
+    @Nested
+    class DeleteArticle {
+        @Test
+        void given_id_when_delete_then_deleteArticle() {
+            // given
+            var id = UUID.randomUUID();
+            // when
+            service.deleteArticle(id);
+            // then
+            verify(articleRepository).deleteById(eq(id));
         }
     }
 
