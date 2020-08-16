@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 @Entity
 @Getter
@@ -26,10 +27,15 @@ public class Article {
 
     @Builder
     private Article(String title, String content, Board board, ZonedDateTime createdAt) {
+        Assert.hasText(title, "title must not be blank");
+        Assert.hasText(content, "content must not be blank");
+        Assert.notNull(board, "article must have parent board");
+        Assert.notNull(createdAt, "article must have created timestamp");
+
         this.title = title;
         this.content = new ArticleContent(this, content);
         this.board = board;
-        this.createdAt = createdAt != null ? createdAt : ZonedDateTime.now();
+        this.createdAt = createdAt;
     }
 
     /**
@@ -43,6 +49,11 @@ public class Article {
                 .content(request.getContent())
                 .createdAt(ZonedDateTime.now())
                 .build();
+    }
+
+    public void update(ArticleRequest request) {
+        this.title = request.getTitle();
+        this.content.updateBody(request.getContent());
     }
 
     public String getContent() {

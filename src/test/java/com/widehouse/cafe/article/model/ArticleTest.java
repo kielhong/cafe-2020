@@ -46,10 +46,24 @@ class ArticleTest {
 
     @Test
     void getContent_thenArticleContentBody() {
-        // given
-        var result = Article.builder().title("title").content("content").createdAt(ZonedDateTime.now()).build();
+        // when
+        var result = Article.builder()
+                .title("title").content("content").board(board).createdAt(ZonedDateTime.now()).build();
         // then
         then(result.getContent())
                 .isEqualTo("content");
+    }
+
+    @Test
+    void update_then_updateTitleAndContent() {
+        // given
+        var article = ArticleFixtures.article();
+        // when
+        article.update(new ArticleRequest(1L, "new title", "new content"));
+        // then
+        then(article).satisfies(a -> {
+            then(a.getTitle()).isEqualTo("new title");
+            then(a.getContent()).isEqualTo("new content");
+        });
     }
 }

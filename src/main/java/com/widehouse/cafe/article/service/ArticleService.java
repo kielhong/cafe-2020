@@ -31,10 +31,27 @@ public class ArticleService {
         return articleRepository.save(Article.from(board, articleRequest));
     }
 
+    /**
+     * delete a article.
+     * @param id id of article
+     */
     public void deleteArticle(UUID id) {
         var article = articleRepository.findById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(id.toString()));
+                .orElseThrow(() -> new ArticleNotFoundException(id));
 
         articleRepository.delete(article);
+    }
+
+    /**
+     * update a article with request.
+     * @param id id of article to update
+     * @param articleRequest update request
+     * @return updated article
+     */
+    public Article updateArticle(UUID id, ArticleRequest articleRequest) {
+        var article = articleRepository.findById(id)
+                .orElseThrow(() -> new ArticleNotFoundException(id));
+        article.update(articleRequest);
+        return articleRepository.save(article);
     }
 }

@@ -1,5 +1,6 @@
 package com.widehouse.cafe.exception;
 
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -7,5 +8,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ArticleNotFoundException extends RuntimeException {
     public ArticleNotFoundException(String id) {
         super(id + " Article does not exist");
+    }
+
+    public ArticleNotFoundException(UUID id) {
+        this(id.toString());
     }
 }

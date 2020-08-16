@@ -21,4 +21,8 @@ public class ArticleContent {
         this.article = article;
         this.body = body;
     }
+
+    public void updateBody(String body) {
+        this.body = body;
+    }
 }

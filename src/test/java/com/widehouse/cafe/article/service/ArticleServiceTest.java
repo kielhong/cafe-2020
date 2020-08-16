@@ -21,6 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -29,6 +31,8 @@ class ArticleServiceTest {
     private ArticleService service;
     @Mock
     private ArticleRepository articleRepository;
+    @Captor
+    private ArgumentCaptor<Article> articleCaptor;
 
     private Board board;
 
@@ -103,4 +107,35 @@ class ArticleServiceTest {
         }
     }
 
+    @Nested
+    class UpdateArticle {
+        @Test
+        void given_request_when_update_then_updateArticle() {
+            // given
+            var id = UUID.randomUUID();
+            var request = new ArticleRequest(1L, "new title", "new content");
+            var article = ArticleFixtures.article();
+            given(articleRepository.findById(eq(id))).willReturn(Optional.of(article));
+            // when
+            service.updateArticle(id, request);
+            // then
+            verify(articleRepository).save(articleCaptor.capture());
+            then(articleCaptor.getValue()).satisfies(a -> {
+                then(a.getTitle()).isEqualTo("new title");
+                then(a.getContent()).isEqualTo("new content");
+            });
+        }
+
+        @Test
+        void given_notExistArticle_then_throwArticleNotFoundException() {
+            // given
+            var id = UUID.randomUUID();
+            var request = new ArticleRequest(1L, "new title", "new content");
+            given(articleRepository.findById(eq(id))).willReturn(Optional.empty());
+            // expect
+            thenThrownBy(() -> service.updateArticle(id, request))
+                    .isInstanceOf(ArticleNotFoundException.class);
+            verify(articleRepository, never()).save(any(Article.class));
+        }
+    }
 }

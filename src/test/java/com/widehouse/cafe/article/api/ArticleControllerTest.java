@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -179,6 +180,40 @@ class ArticleControllerTest {
                     .given(articleService).deleteArticle(id);
             // when
             mvc.perform(delete("/api/articles/{id}", id))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("PUT /api/articles/{id}")
+    class UpdateArticle {
+        @Test
+        void given_request_then_updateArticle() throws Exception {
+            // given
+            final var id = UUID.randomUUID();
+            var article = ArticleFixtures.article();
+            ReflectionTestUtils.setField(article, "id", id);
+            given(articleService.updateArticle(eq(id), any(ArticleRequest.class))).willReturn(article);
+            // when
+            Map<String, String> body = Map.of("title", "new title", "content", "new content");
+            mvc.perform(put("/api/articles/{id}", id)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(body)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(id.toString()));
+        }
+
+        @Test
+        void given_notExistArticle_when_update_then_throw404NotFound() throws Exception {
+            // given
+            final var id = UUID.randomUUID();
+            given(articleService.updateArticle(eq(id), any(ArticleRequest.class)))
+                    .willThrow(new ArticleNotFoundException(id));
+            // when
+            Map<String, String> body = Map.of("title", "new title", "content", "new content");
+            mvc.perform(put("/api/articles/{id}", id)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(body)))
                     .andExpect(status().isNotFound());
         }
     }

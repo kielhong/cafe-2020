@@ -26,7 +26,8 @@ class ArticleRepositoryTest {
     @Test
     void save_then_contentToArticleContent() {
         // given
-        var article = Article.builder().title("title").content("content").createdAt(ZonedDateTime.now()).build();
+        var article = Article.builder()
+                .title("title").content("content").board(board).createdAt(ZonedDateTime.now()).build();
         repository.save(article);
         // when
         var result = repository.findById(article.getId());
