@@ -6,7 +6,6 @@ import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardRepository;
 import com.widehouse.cafe.exception.ArticleNotFoundException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -19,10 +18,6 @@ public class ArticleService {
     public ArticleService(ArticleRepository articleRepository, BoardRepository boardRepository) {
         this.articleRepository = articleRepository;
         this.boardRepository = boardRepository;
-    }
-
-    public List<Article> listByBoard(Board board) {
-        return articleRepository.findByBoard(board);
     }
 
     public Optional<Article> getArticle(UUID id) {

@@ -1,12 +1,10 @@
 package com.widehouse.cafe.article.api;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -51,33 +49,6 @@ class ArticleControllerTest {
     private BoardService boardService;
     @MockBean
     private ArticleService articleService;
-
-    @Nested
-    @DisplayName("GET /api/cafes/{nickname}/boards/{boardId}/articles")
-    class ListArticle {
-        @Test
-        void given_articles_then_listArticles() throws Exception {
-            // given
-            var board = BoardFixtures.board1();
-            given(boardService.getBoard(anyLong())).willReturn(Optional.of(board));
-            var articles = ArticleFixtures.articles(board);
-            given(articleService.listByBoard(any(Board.class))).willReturn(articles);
-            // when
-            mvc.perform(get("/api/cafes/{nickname}/boards/{id}/articles", "foo", 1L))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$", hasSize(articles.size())));
-        }
-
-        @Test
-        void given_notExistBoard_then_listEmpties() throws Exception {
-            // given
-            given(boardService.getBoard(anyLong())).willReturn(Optional.empty());
-            // when
-            mvc.perform(get("/api/cafes/{nickname}/boards/{id}/articles", "foo", 1L))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$", hasSize(0)));
-        }
-    }
 
     @Nested
     @DisplayName("GET /api/articles/{id}")

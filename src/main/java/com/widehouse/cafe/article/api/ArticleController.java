@@ -4,8 +4,6 @@ import com.widehouse.cafe.article.model.Article;
 import com.widehouse.cafe.article.service.ArticleService;
 import com.widehouse.cafe.article.service.BoardService;
 import com.widehouse.cafe.exception.ArticleNotFoundException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.validation.Valid;
@@ -29,19 +27,6 @@ public class ArticleController {
     public ArticleController(BoardService boardService, ArticleService articleService) {
         this.boardService = boardService;
         this.articleService = articleService;
-    }
-
-    /**
-     * GET /api/cafes/{nickname}/boards/{boardId}/articles.
-     * @param nickname nickname of Cafe
-     * @param boardId id of Board
-     * @return list of Articles
-     */
-    @GetMapping("cafes/{nickname}/boards/{boardId}/articles")
-    public List<Article> listArticles(@PathVariable String nickname, @PathVariable Long boardId) {
-        return boardService.getBoard(boardId)
-                .map(board -> articleService.listByBoard(board))
-                .orElse(Collections.emptyList());
     }
 
     @GetMapping("articles/{id}")

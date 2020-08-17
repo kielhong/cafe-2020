@@ -49,17 +49,6 @@ class ArticleServiceTest {
     }
 
     @Test
-    void given_articles_when_listByBoard_then_listArticles() {
-        // given
-        var articles = ArticleFixtures.articles(board);
-        given(articleRepository.findByBoard(any(Board.class))).willReturn(articles);
-        // when
-        var result = service.listByBoard(board);
-        // then
-        then(result).isEqualTo(articles);
-    }
-
-    @Test
     void given_article_when_getArticle_then_returnArticle() {
         // given
         var article = ArticleFixtures.article();
