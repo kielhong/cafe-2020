@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
 class BoardRepositoryTest {
@@ -28,7 +29,10 @@ class BoardRepositoryTest {
         // given
         var boards = BoardFixtures.boards(cafe);
         boards.stream()
-                .forEach(board -> entityManager.persist(board));
+                .forEach(board -> {
+                    ReflectionTestUtils.setField(board, "id", null);
+                    entityManager.persist(board);
+                });
         // when
         var result = repository.findByCafe(cafe);
         // then

@@ -58,10 +58,12 @@ class ArticleTest {
     void update_then_updateTitleAndContent() {
         // given
         var article = ArticleFixtures.article();
+        var board2 = BoardFixtures.board2();
         // when
-        article.update(new ArticleRequest(1L, "new title", "new content"));
+        article.update(board2, "new title", "new content");
         // then
         then(article).satisfies(a -> {
+            then(a.getBoard()).isEqualTo(board2);
             then(a.getTitle()).isEqualTo("new title");
             then(a.getContent()).isEqualTo("new content");
         });

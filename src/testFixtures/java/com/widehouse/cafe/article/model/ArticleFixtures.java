@@ -2,6 +2,8 @@ package com.widehouse.cafe.article.model;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class ArticleFixtures {
     /**
@@ -26,8 +28,10 @@ public class ArticleFixtures {
      * @return Article
      */
     public static Article article() {
-        return Article.builder()
+        var article = Article.builder()
                 .title("article1").content("content1").board(BoardFixtures.board1()).createdAt(ZonedDateTime.now())
                 .build();
+        ReflectionTestUtils.setField(article, "id", UUID.randomUUID());
+        return article;
     }
 }

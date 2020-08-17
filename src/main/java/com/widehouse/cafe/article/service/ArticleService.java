@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final BoardRepository boardRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, BoardRepository boardRepository) {
         this.articleRepository = articleRepository;
+        this.boardRepository = boardRepository;
     }
 
     public List<Article> listByBoard(Board board) {
@@ -46,12 +48,28 @@ public class ArticleService {
      * update a article with request.
      * @param id id of article to update
      * @param articleRequest update request
-     * @return updated article
      */
-    public Article updateArticle(UUID id, ArticleRequest articleRequest) {
+    public void updateArticle(final UUID id, ArticleRequest articleRequest) {
         var article = articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException(id));
-        article.update(articleRequest);
-        return articleRepository.save(article);
+        var board = updateBoard(article.getBoard(), articleRequest.getBoardId());
+        article.update(board, articleRequest.getTitle(), articleRequest.getContent());
+
+        articleRepository.save(article);
+    }
+
+    private Board updateBoard(final Board srcBoard, final Long destBoardId) {
+        if (srcBoard.getId().equals(destBoardId)) {
+            return srcBoard;
+        }
+
+        var destBoardOptional = boardRepository.findById(destBoardId);
+        if (destBoardOptional.isEmpty()) {
+            throw new IllegalArgumentException(destBoardId + " board does not exits");
+        }
+        if (!srcBoard.getCafe().equals(destBoardOptional.get().getCafe())) {
+            throw new IllegalArgumentException(destBoardId + " board is in different cafe");
+        }
+        return destBoardOptional.get();
     }
 }

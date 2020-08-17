@@ -3,6 +3,7 @@ package com.widehouse.cafe.article.service;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -14,6 +15,8 @@ import com.widehouse.cafe.article.model.ArticleFixtures;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
+import com.widehouse.cafe.article.model.BoardRepository;
+import com.widehouse.cafe.cafe.model.CafeFixtures;
 import com.widehouse.cafe.exception.ArticleNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,12 +28,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
     private ArticleService service;
     @Mock
     private ArticleRepository articleRepository;
+    @Mock
+    private BoardRepository boardRepository;
     @Captor
     private ArgumentCaptor<Article> articleCaptor;
 
@@ -38,7 +44,7 @@ class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ArticleService(articleRepository);
+        service = new ArticleService(articleRepository, boardRepository);
         board = BoardFixtures.board1();
     }
 
@@ -112,15 +118,18 @@ class ArticleServiceTest {
         @Test
         void given_request_when_update_then_updateArticle() {
             // given
-            var id = UUID.randomUUID();
-            var request = new ArticleRequest(1L, "new title", "new content");
             var article = ArticleFixtures.article();
-            given(articleRepository.findById(eq(id))).willReturn(Optional.of(article));
+            given(articleRepository.findById(any(UUID.class))).willReturn(Optional.of(article));
+            var board2 = BoardFixtures.board2();
+            ReflectionTestUtils.setField(board2, "cafe", article.getBoard().getCafe());
+            given(boardRepository.findById(anyLong())).willReturn(Optional.of(board2));
             // when
-            service.updateArticle(id, request);
+            var request = new ArticleRequest(board2.getId(), "new title", "new content");
+            service.updateArticle(UUID.randomUUID(), request);
             // then
             verify(articleRepository).save(articleCaptor.capture());
             then(articleCaptor.getValue()).satisfies(a -> {
+                then(a.getBoard()).isEqualTo(board2);
                 then(a.getTitle()).isEqualTo("new title");
                 then(a.getContent()).isEqualTo("new content");
             });
@@ -129,12 +138,60 @@ class ArticleServiceTest {
         @Test
         void given_notExistArticle_then_throwArticleNotFoundException() {
             // given
-            var id = UUID.randomUUID();
-            var request = new ArticleRequest(1L, "new title", "new content");
-            given(articleRepository.findById(eq(id))).willReturn(Optional.empty());
+            given(articleRepository.findById(any(UUID.class))).willReturn(Optional.empty());
             // expect
-            thenThrownBy(() -> service.updateArticle(id, request))
+            var request = new ArticleRequest(1L, "new title", "new content");
+            thenThrownBy(() -> service.updateArticle(UUID.randomUUID(), request))
                     .isInstanceOf(ArticleNotFoundException.class);
+            verify(articleRepository, never()).save(any(Article.class));
+        }
+    }
+
+    @Nested
+    class UpdateBoardOfArticle {
+        @Test
+        void given_request_when_updateSameBoard_then_doesNotUpdateBoard() {
+            // given
+            var article = ArticleFixtures.article();
+            given(articleRepository.findById(any(UUID.class))).willReturn(Optional.of(article));
+            var board = article.getBoard();
+            // when
+            var request = new ArticleRequest(board.getId(), "new title", "new content");
+            service.updateArticle(UUID.randomUUID(), request);
+            // then
+            verify(articleRepository).save(articleCaptor.capture());
+            then(articleCaptor.getValue()).satisfies(a -> {
+                then(a.getBoard()).isEqualTo(board);
+                then(a.getTitle()).isEqualTo("new title");
+                then(a.getContent()).isEqualTo("new content");
+            });
+        }
+
+        @Test
+        void given_nonExistBoard_when_updateBoard_then_throwIllegalArgumentException() {
+            // given
+            given(articleRepository.findById(any(UUID.class))).willReturn(Optional.of(ArticleFixtures.article()));
+            given(boardRepository.findById(anyLong())).willReturn(Optional.empty());
+            // when
+            var request = new ArticleRequest(2L, "new title", "new content");
+            thenThrownBy(() -> service.updateArticle(UUID.randomUUID(), request))
+                    .isInstanceOf(IllegalArgumentException.class);
+            // then
+            verify(articleRepository, never()).save(any(Article.class));
+        }
+
+        @Test
+        void given_boardInAnotherCafe_then_throwIllegalArgumentException() {
+            // given
+            given(articleRepository.findById(any(UUID.class))).willReturn(Optional.of(ArticleFixtures.article()));
+            var board2 = BoardFixtures.board2();
+            ReflectionTestUtils.setField(board2, "cafe", CafeFixtures.bar());
+            given(boardRepository.findById(anyLong())).willReturn(Optional.of(board2));
+            // when
+            var request = new ArticleRequest(board2.getId(), "new title", "new content");
+            thenThrownBy(() -> service.updateArticle(UUID.randomUUID(), request))
+                    .isInstanceOf(IllegalArgumentException.class);
+            // then
             verify(articleRepository, never()).save(any(Article.class));
         }
     }

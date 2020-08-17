@@ -2,6 +2,7 @@ package com.widehouse.cafe.article.model;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+import com.widehouse.cafe.cafe.model.CafeFixtures;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,8 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        board = entityManager.persist(BoardFixtures.board1());
+        board = entityManager.persist(Board.builder()
+                .name("board").description("desc").order(1).cafe(CafeFixtures.foo()).build());
     }
 
     @Test

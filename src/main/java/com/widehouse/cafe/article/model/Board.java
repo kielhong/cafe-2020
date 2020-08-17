@@ -9,9 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
-@ToString
 @Entity
 @Getter
 public class Board implements Comparable<Board> {

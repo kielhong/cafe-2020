@@ -65,11 +65,20 @@ public class ArticleController {
         return Map.of("id", article.getId());
     }
 
+    /**
+     * PUT /api/articles/{id}.
+     * @param id id of article
+     * @param articleRequest requestBody for article
+     */
     @PutMapping("articles/{id}")
     public Map<String, UUID> updateArticle(@PathVariable UUID id,
                                            @RequestBody ArticleRequest articleRequest) {
-        var article = articleService.updateArticle(id, articleRequest);
-        return Map.of("id", article.getId());
+        try {
+            articleService.updateArticle(id, articleRequest);
+            return Map.of("id", id);
+        } catch (IllegalArgumentException iae) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, iae.getMessage());
+        }
     }
 
     /**

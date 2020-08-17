@@ -51,9 +51,16 @@ public class Article {
                 .build();
     }
 
-    public void update(ArticleRequest request) {
-        this.title = request.getTitle();
-        this.content.updateBody(request.getContent());
+    /**
+     * update Article data.
+     * @param board board of article
+     * @param title new title of article
+     * @param content new content of article
+     */
+    public void update(Board board, String title, String content) {
+        this.board = board;
+        this.title = title;
+        this.content.updateBody(content);
     }
 
     public String getContent() {
