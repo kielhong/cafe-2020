@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.widehouse.cafe.article.model.ArticleFixtures;
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.service.ArticleListService;
+import com.widehouse.cafe.article.service.BoardService;
 import com.widehouse.cafe.cafe.model.CafeFixtures;
 import com.widehouse.cafe.cafe.service.CafeService;
 import java.util.ArrayList;
@@ -34,22 +35,39 @@ class ArticleListControllerTest {
     @MockBean
     private ArticleListService articleListService;
     @MockBean
+    private BoardService boardService;
+    @MockBean
     private CafeService cafeService;
 
     @Nested
-    @DisplayName("GET /api/articles?boardId={boardId}")
+    @DisplayName("GET /api/boards/{boardId}/articles")
     class ArticleListByBoard {
         @Test
         void given_articles_when_listByBoard_thenListSameBoardArticles() throws Exception {
             // given
-            var articles = ArticleFixtures.articles(BoardFixtures.board1(), 5);
-            given(articleListService.listByBoard(anyLong(), any())).willReturn(new SliceImpl<>(articles));
+            var board = BoardFixtures.board1();
+            given(boardService.getBoard(anyLong())).willReturn(Optional.of(board));
+            var articles = ArticleFixtures.articles(board, 5);
+            given(articleListService.listByBoard(eq(board), any())).willReturn(new SliceImpl<>(articles));
             // when
-            mvc.perform(get("/api/articles")
-                    .param("boardId", "1")
+            mvc.perform(get("/api/boards/{id}/articles", 1L)
                     .param("size", "5"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.content", hasSize(5)));
+        }
+
+        @Test
+        void given_invalidBoard_when_listByBoard_thenEmptyList() throws Exception {
+            // given
+            given(boardService.getBoard(anyLong())).willReturn(Optional.empty());
+            // when
+            mvc.perform(get("/api/boards/{boardId}/articles", 1L)
+                    .param("page", "1")
+                    .param("size", "5"))
+                    .andExpect(status().isOk())
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(jsonPath("$.content", hasSize(0)))
+                    .andExpect(jsonPath("$.empty").value(true));
         }
     }
 
