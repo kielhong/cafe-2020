@@ -1,6 +1,7 @@
 package com.widehouse.cafe.cafe.model;
 
 import java.time.ZonedDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class Cafe {
     private String name;
     private String nickname;
     private String description;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Category category;
     private ZonedDateTime createdAt;
     @Getter(AccessLevel.PRIVATE)

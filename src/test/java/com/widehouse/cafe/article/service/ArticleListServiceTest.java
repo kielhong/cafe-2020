@@ -10,6 +10,7 @@ import com.widehouse.cafe.article.model.ArticleFixtures;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.model.BoardRepository;
+import com.widehouse.cafe.cafe.model.CafeFixtures;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +35,7 @@ class ArticleListServiceTest {
     }
 
     @Nested
-    class BoardList {
+    class ListArticleByBoard {
         @Test
         void given_board_then_listWithPaging() {
             // given
@@ -56,6 +57,22 @@ class ArticleListServiceTest {
             var result = service.listByBoard(-1L, PageRequest.of(1, 5));
             // then
             then(result.getContent().size()).isEqualTo(0);
+        }
+    }
+
+    @Nested
+    class ListArticleByCafe {
+        @Test
+        void given_cafe_then_listWithPaging() {
+            // given
+            var cafe = CafeFixtures.foo();
+            var board = BoardFixtures.board1(cafe);
+            var articles = ArticleFixtures.articles(board, 5);
+            given(articleRepository.findByCafe(eq(cafe), any())).willReturn(new SliceImpl<>(articles));
+            // when
+            var result = service.listByCafe(cafe, PageRequest.of(1, 5));
+            // then
+            then(result.getContent()).isEqualTo(articles);
         }
     }
 }

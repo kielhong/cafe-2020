@@ -3,6 +3,7 @@ package com.widehouse.cafe.article.service;
 import com.widehouse.cafe.article.model.Article;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.BoardRepository;
+import com.widehouse.cafe.cafe.model.Cafe;
 import java.util.Collections;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -28,5 +29,9 @@ public class ArticleListService {
         return boardRepository.findById(boardId)
                 .map(board -> articleRepository.findByBoard(board, pageable))
                 .orElse(new SliceImpl<>(Collections.emptyList()));
+    }
+
+    public Slice<Article> listByCafe(Cafe cafe, Pageable pageable) {
+        return articleRepository.findByCafe(cafe, pageable);
     }
 }

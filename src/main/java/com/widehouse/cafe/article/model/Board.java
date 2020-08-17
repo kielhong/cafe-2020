@@ -1,8 +1,10 @@
 package com.widehouse.cafe.article.model;
 
 import com.widehouse.cafe.cafe.model.Cafe;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +19,7 @@ public class Board implements Comparable<Board> {
     private Long id;
     private String name;
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Cafe cafe;
     @Column(name = "list_order")
     private int order;
