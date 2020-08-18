@@ -1,12 +1,14 @@
 package com.widehouse.cafe.comment.api;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.widehouse.cafe.comment.model.Comment;
 import com.widehouse.cafe.comment.service.CommentService;
+import com.widehouse.cafe.exception.CommentNotFoundException;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -57,6 +59,17 @@ class CommentControllerTest {
                     .exchange()
                     .expectStatus().isOk();
             verify(commentService).deleteComment(eq(commentId));
+        }
+
+        @Test
+        void given_notExistComment_when_delete_then_404NotFound() {
+            // given
+            given(commentService.deleteComment(anyString()))
+                    .willReturn(Mono.error(new CommentNotFoundException("123456")));
+            // when
+            client.delete().uri("/api/comments/{id}", "123456")
+                    .exchange()
+                    .expectStatus().isNotFound();
         }
     }
 }

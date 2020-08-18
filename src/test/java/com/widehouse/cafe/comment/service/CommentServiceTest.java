@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import com.widehouse.cafe.comment.api.CommentRequest;
 import com.widehouse.cafe.comment.model.Comment;
 import com.widehouse.cafe.comment.model.CommentRepository;
+import com.widehouse.cafe.exception.CommentNotFoundException;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,5 +65,17 @@ class CommentServiceTest {
         StepVerifier.create(result).verifyComplete();
         verify(commentRepository).save(commentCaptor.capture());
         then(commentCaptor.getValue().isDeleted()).isTrue();
+    }
+
+    @Test
+    void given_notExistComment_when_delete_then_MonoErrorWithCommentNotFoundException() {
+        // given
+        given(commentRepository.findById(anyString())).willReturn(Mono.empty());
+        // when
+        var result = service.deleteComment("123456");
+        // then
+        StepVerifier.create(result)
+                .expectError(CommentNotFoundException.class)
+                .verify();
     }
 }
