@@ -3,7 +3,7 @@ package com.widehouse.cafe.comment.service;
 import com.widehouse.cafe.comment.api.CommentRequest;
 import com.widehouse.cafe.comment.model.Comment;
 import com.widehouse.cafe.comment.model.CommentRepository;
-import com.widehouse.cafe.exception.CommentNotFoundException;
+import com.widehouse.cafe.common.exception.CommentNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 

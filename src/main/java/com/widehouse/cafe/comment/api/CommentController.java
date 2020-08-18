@@ -1,6 +1,7 @@
 package com.widehouse.cafe.comment.api;
 
 import com.widehouse.cafe.comment.service.CommentService;
+import com.widehouse.cafe.common.dto.ResultResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +23,9 @@ public class CommentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void postComment(@RequestBody CommentRequest commentRequest) {
-        commentService.createComment(commentRequest);
+    public Mono<ResultResponse> postComment(@RequestBody CommentRequest commentRequest) {
+        return commentService.createComment(commentRequest)
+                .map(comment -> new ResultResponse<>(comment.getId()));
     }
 
     @DeleteMapping("{commentId}")

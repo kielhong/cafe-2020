@@ -20,7 +20,7 @@ import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.service.ArticleService;
 import com.widehouse.cafe.article.service.BoardService;
-import com.widehouse.cafe.exception.ArticleNotFoundException;
+import com.widehouse.cafe.common.exception.ArticleNotFoundException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;

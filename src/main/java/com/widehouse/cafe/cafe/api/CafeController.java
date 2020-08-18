@@ -2,7 +2,7 @@ package com.widehouse.cafe.cafe.api;
 
 import com.widehouse.cafe.cafe.model.Cafe;
 import com.widehouse.cafe.cafe.service.CafeService;
-import com.widehouse.cafe.exception.CafeNotFoundException;
+import com.widehouse.cafe.common.exception.CafeNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

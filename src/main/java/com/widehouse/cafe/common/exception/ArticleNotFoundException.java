@@ -1,4 +1,4 @@
-package com.widehouse.cafe.exception;
+package com.widehouse.cafe.common.exception;
 
 import java.util.UUID;
 import org.springframework.http.HttpStatus;

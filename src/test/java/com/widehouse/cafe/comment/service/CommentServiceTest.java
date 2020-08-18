@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import com.widehouse.cafe.comment.api.CommentRequest;
 import com.widehouse.cafe.comment.model.Comment;
 import com.widehouse.cafe.comment.model.CommentRepository;
-import com.widehouse.cafe.exception.CommentNotFoundException;
+import com.widehouse.cafe.common.exception.CommentNotFoundException;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

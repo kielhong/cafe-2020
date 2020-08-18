@@ -3,7 +3,7 @@ package com.widehouse.cafe.article.api;
 import com.widehouse.cafe.article.model.Article;
 import com.widehouse.cafe.article.service.ArticleService;
 import com.widehouse.cafe.article.service.BoardService;
-import com.widehouse.cafe.exception.ArticleNotFoundException;
+import com.widehouse.cafe.common.exception.ArticleNotFoundException;
 import java.util.Map;
 import java.util.UUID;
 import javax.validation.Valid;

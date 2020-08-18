@@ -5,7 +5,7 @@ import com.widehouse.cafe.article.model.Article;
 import com.widehouse.cafe.article.model.ArticleRepository;
 import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardRepository;
-import com.widehouse.cafe.exception.ArticleNotFoundException;
+import com.widehouse.cafe.common.exception.ArticleNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;

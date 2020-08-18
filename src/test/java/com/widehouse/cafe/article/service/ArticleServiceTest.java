@@ -17,7 +17,7 @@ import com.widehouse.cafe.article.model.Board;
 import com.widehouse.cafe.article.model.BoardFixtures;
 import com.widehouse.cafe.article.model.BoardRepository;
 import com.widehouse.cafe.cafe.model.CafeFixtures;
-import com.widehouse.cafe.exception.ArticleNotFoundException;
+import com.widehouse.cafe.common.exception.ArticleNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
