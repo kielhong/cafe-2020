@@ -17,4 +17,18 @@ public class CommentService {
     public Mono<Comment> createComment(CommentRequest commentRequest) {
         return commentRepository.save(Comment.from(commentRequest));
     }
+
+    /**
+     * softly delete a comment.
+     * @param commentId id of comment to delete
+     */
+    public Mono<Void> deleteComment(String commentId) {
+        return commentRepository.findById(commentId)
+                .map(comment -> {
+                    comment.delete();
+                    return comment;
+                })
+                .flatMap(commentRepository::save)
+                .then();
+    }
 }

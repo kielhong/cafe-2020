@@ -2,6 +2,7 @@ package com.widehouse.cafe.comment.service;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -49,5 +50,19 @@ class CommentServiceTest {
             then(c.getArticleId()).isEqualTo(articleId);
             then(c.getContent()).isEqualTo("comment");
         });
+    }
+
+    @Test
+    void given_id_when_delete_thenSoftDeleteComment() {
+        // given
+        var comment = Comment.builder().articleId(UUID.randomUUID()).content("comment").build();
+        given(commentRepository.findById(anyString())).willReturn(Mono.just(comment));
+        given(commentRepository.save(any(Comment.class))).willReturn(Mono.just(comment)); // dummy mono
+        // when
+        var result = service.deleteComment("123456");
+        // then
+        StepVerifier.create(result).verifyComplete();
+        verify(commentRepository).save(commentCaptor.capture());
+        then(commentCaptor.getValue().isDeleted()).isTrue();
     }
 }

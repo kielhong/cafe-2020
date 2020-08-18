@@ -20,6 +20,7 @@ class CommentTest {
             then(c.getContent()).isEqualTo("comment");
             then(c.getArticleId()).isEqualTo(articleId);
             then(c.getCreatedAt()).isEqualTo(now);
+            then(c.isDeleted()).isFalse();
         });
     }
 
@@ -35,6 +36,18 @@ class CommentTest {
             then(c.getContent()).isEqualTo("comment");
             then(c.getArticleId()).isEqualTo(articleId);
             then(c.getCreatedAt()).isNotNull();
+            then(c.isDeleted()).isFalse();
         });
+    }
+
+    @Test
+    void given_comment_when_delete_then_updateDeleteToTrue() {
+        // given
+        var comment = Comment.builder()
+                .articleId(UUID.randomUUID()).content("comment").createdAt(ZonedDateTime.now()).build();
+        // when
+        comment.delete();
+        // then
+        then(comment.isDeleted()).isTrue();
     }
 }

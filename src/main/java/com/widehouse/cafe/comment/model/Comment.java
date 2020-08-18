@@ -5,9 +5,11 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@ToString
 @Document
 @Getter
 public class Comment {
@@ -17,12 +19,14 @@ public class Comment {
     private UUID articleId;
     private String content;
     private ZonedDateTime createdAt;
+    private boolean deleted;
 
     @Builder
     private Comment(UUID articleId, String content, ZonedDateTime createdAt) {
         this.articleId = articleId;
         this.content = content;
         this.createdAt = createdAt;
+        this.deleted = false;
     }
 
     /**
@@ -34,5 +38,9 @@ public class Comment {
                 .content(request.getContent())
                 .createdAt(ZonedDateTime.now())
                 .build();
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 }
