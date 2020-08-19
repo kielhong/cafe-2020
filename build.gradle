@@ -64,3 +64,8 @@ asciidoctor {
 	inputs.dir snippetsDir
 	dependsOn test
 }
+
+task checkstyleAll {
+	dependsOn checkstyleMain
+	dependsOn checkstyleTest
+}

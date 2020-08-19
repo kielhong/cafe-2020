@@ -5,8 +5,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.web.servlet.function.RequestPredicates.param;
-import static org.springframework.web.servlet.function.RequestPredicates.path;
 
 import com.widehouse.cafe.comment.model.Comment;
 import com.widehouse.cafe.comment.model.CommentFixtures;

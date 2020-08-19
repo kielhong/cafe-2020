@@ -20,9 +20,11 @@ class CommentRepositoryTest {
         // given
         var articleId = UUID.randomUUID();
         IntStream.range(1, 6)
-                .forEach(i -> template.save(Comment.builder().articleId(articleId).content("comment" + i).build()).block());
+                .forEach(i -> template.save(
+                        Comment.builder().articleId(articleId).content("comment" + i).build()).block());
         IntStream.range(1, 5)
-                .forEach(i -> template.save(Comment.builder().articleId(UUID.randomUUID()).content("other comment").build()).block());
+                .forEach(i -> template.save(
+                        Comment.builder().articleId(UUID.randomUUID()).content("other comment").build()).block());
         // when
         var result = repository.findAllByArticleId(articleId);
         // then
