@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Getter
 public class Board implements Comparable<Board> {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

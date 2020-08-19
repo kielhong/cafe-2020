@@ -10,8 +10,10 @@ import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Getter
 public class Cafe {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
