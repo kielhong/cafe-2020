@@ -1,7 +1,7 @@
 package com.widehouse.cafe.comment.model;
 
 import com.widehouse.cafe.comment.api.CommentRequest;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,11 +18,11 @@ public class Comment {
 
     private UUID articleId;
     private String content;
-    private ZonedDateTime createdAt;
+    private LocalDateTime createdAt;
     private boolean deleted;
 
     @Builder
-    private Comment(UUID articleId, String content, ZonedDateTime createdAt) {
+    private Comment(UUID articleId, String content, LocalDateTime createdAt) {
         this.articleId = articleId;
         this.content = content;
         this.createdAt = createdAt;
@@ -36,7 +36,7 @@ public class Comment {
         return Comment.builder()
                 .articleId(UUID.fromString(request.getArticleId()))
                 .content(request.getContent())
-                .createdAt(ZonedDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 

@@ -3,7 +3,7 @@ package com.widehouse.cafe.comment.model;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import com.widehouse.cafe.comment.api.CommentRequest;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ class CommentTest {
     void build_then_construct() {
         // given
         var articleId = UUID.randomUUID();
-        var now = ZonedDateTime.now();
+        var now = LocalDateTime.now();
         // when
         var comment = Comment.builder().articleId(articleId).content("comment").createdAt(now).build();
         // then
@@ -44,7 +44,7 @@ class CommentTest {
     void given_comment_when_delete_then_updateDeleteToTrue() {
         // given
         var comment = Comment.builder()
-                .articleId(UUID.randomUUID()).content("comment").createdAt(ZonedDateTime.now()).build();
+                .articleId(UUID.randomUUID()).content("comment").createdAt(LocalDateTime.now()).build();
         // when
         comment.delete();
         // then
