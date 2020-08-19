@@ -4,7 +4,9 @@ import com.widehouse.cafe.comment.api.CommentRequest;
 import com.widehouse.cafe.comment.model.Comment;
 import com.widehouse.cafe.comment.model.CommentRepository;
 import com.widehouse.cafe.common.exception.CommentNotFoundException;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -32,5 +34,9 @@ public class CommentService {
                 .flatMap(commentRepository::save)
                 .switchIfEmpty(Mono.error(new CommentNotFoundException(commentId)))
                 .then();
+    }
+
+    public Flux<Comment> listComment(UUID articleId) {
+        return commentRepository.findAllByArticleId(articleId);
     }
 }

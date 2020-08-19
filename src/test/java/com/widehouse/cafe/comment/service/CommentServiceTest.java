@@ -3,11 +3,13 @@ package com.widehouse.cafe.comment.service;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.widehouse.cafe.comment.api.CommentRequest;
 import com.widehouse.cafe.comment.model.Comment;
+import com.widehouse.cafe.comment.model.CommentFixtures;
 import com.widehouse.cafe.comment.model.CommentRepository;
 import com.widehouse.cafe.common.exception.CommentNotFoundException;
 import java.util.UUID;
@@ -18,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -77,5 +80,23 @@ class CommentServiceTest {
         StepVerifier.create(result)
                 .expectError(CommentNotFoundException.class)
                 .verify();
+    }
+
+    @Test
+    void given_commentsOfArticle_when_list_then_FluxComments() {
+        // given
+        var articleId = UUID.randomUUID();
+        var comments = CommentFixtures.comments(articleId, 5);
+        given(commentRepository.findAllByArticleId(eq(articleId))).willReturn(Flux.fromIterable(comments));
+        // when
+        var result = service.listComment(articleId);
+        // then
+        StepVerifier.create(result.log())
+                .expectNext(comments.get(0))
+                .expectNext(comments.get(1))
+                .expectNext(comments.get(2))
+                .expectNext(comments.get(3))
+                .expectNext(comments.get(4))
+                .verifyComplete();
     }
 }

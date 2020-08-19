@@ -5,8 +5,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.web.servlet.function.RequestPredicates.param;
+import static org.springframework.web.servlet.function.RequestPredicates.path;
 
 import com.widehouse.cafe.comment.model.Comment;
+import com.widehouse.cafe.comment.model.CommentFixtures;
 import com.widehouse.cafe.comment.service.CommentService;
 import com.widehouse.cafe.common.exception.CommentNotFoundException;
 import java.util.UUID;
@@ -19,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @WebFluxTest(CommentController.class)
@@ -74,6 +78,24 @@ class CommentControllerTest {
             client.delete().uri("/api/comments/{id}", "123456")
                     .exchange()
                     .expectStatus().isNotFound();
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /api/comments?articleId={articleId}")
+    class ListComments {
+        @Test
+        void given_comments_when_get_return_FluxCommentsOfArticle() {
+            // given
+            var articleId = UUID.randomUUID();
+            var comments = CommentFixtures.comments(articleId, 5);
+            given(commentService.listComment(any(UUID.class))).willReturn(Flux.fromIterable(comments));
+            // when
+            client.get().uri(uriBuilder -> uriBuilder
+                    .path("/api/comments").queryParam("articleId", articleId).build())
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBodyList(Comment.class).hasSize(comments.size());
         }
     }
 }
